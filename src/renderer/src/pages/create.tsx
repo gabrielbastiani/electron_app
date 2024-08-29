@@ -1,18 +1,18 @@
+import { FormEvent, useRef } from "react"
 
 export function Create() {
 
-    const doc = {
-        name: "Pablo Mosconi",
-        email: "pablo@teste.com",
-        phone: "54991663743",
-        address: "Rua X, centro",
-        role: "Frontend",
-        status: true
-    }
+    const nameRef = useRef<HTMLInputElement | null>(null);
+    const emailRef = useRef<HTMLInputElement | null>(null);
+    const addressRef = useRef<HTMLInputElement | null>(null);
+    const phoneRef = useRef<HTMLInputElement | null>(null);
+    const roleRef = useRef<HTMLInputElement | null>(null);
     
-    async function handleAddCustomer() {
-        const response = await window.api.addCustomer(doc)
-        console.log(response)
+    async function handleAddCustomer(e: FormEvent) {
+        e.preventDefault();
+
+        /* const response = await window.api.addCustomer(doc)
+        console.log(response) */
     }
 
     return (
@@ -22,13 +22,14 @@ export function Create() {
                     Cadastrar novo cliente
                 </h1>
 
-                <form className="w-full max-w-96 mt-4">
+                <form className="w-full max-w-96 mt-4" onSubmit={handleAddCustomer}>
                     <div className="mb-2">
                         <label className="text-lg">Nome:</label>
                         <input
                             type="text"
                             placeholder="Digite o nome do cliente..."
                             className="w-full h-9 rounded text-black px-2"
+                            ref={nameRef}
                         />
                     </div>
 
@@ -38,6 +39,7 @@ export function Create() {
                             type="text"
                             placeholder="Digite o endereço..."
                             className="w-full h-9 rounded text-black px-2"
+                            ref={addressRef}
                         />
                     </div>
 
@@ -47,6 +49,7 @@ export function Create() {
                             type="text"
                             placeholder="Digite o email do cliente..."
                             className="w-full h-9 rounded text-black px-2"
+                            ref={emailRef}
                         />
                     </div>
 
@@ -56,6 +59,7 @@ export function Create() {
                             type="text"
                             placeholder="Digite o telefone do cliente..."
                             className="w-full h-9 rounded text-black px-2"
+                            ref={phoneRef}
                         />
                     </div>
 
@@ -65,6 +69,7 @@ export function Create() {
                             type="text"
                             placeholder="Digite o cargo do cliente..."
                             className="w-full h-9 rounded text-black px-2"
+                            ref={roleRef}
                         />
                     </div>
 
