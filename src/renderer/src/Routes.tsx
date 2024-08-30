@@ -10,7 +10,7 @@ export function Routes() {
     return (
         <Router
             main={
-                <Route path='/' element={<Layout/>}>
+                <Route path='/' element={<Layout />} >
                     <Route path='/' element={<Home />} />
                     <Route path='/create' element={<Create />} />
                     <Route path='/about' element={<About />} />
