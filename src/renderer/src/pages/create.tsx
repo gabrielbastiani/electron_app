@@ -1,18 +1,66 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FormEvent, useRef } from "react"
+import { useNavigate } from "react-router-dom";
+
+interface DataMutation {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    role: string;
+}
 
 export function Create() {
+
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const nameRef = useRef<HTMLInputElement | null>(null);
     const emailRef = useRef<HTMLInputElement | null>(null);
     const addressRef = useRef<HTMLInputElement | null>(null);
     const phoneRef = useRef<HTMLInputElement | null>(null);
     const roleRef = useRef<HTMLInputElement | null>(null);
-    
+
+    const { isPending, mutateAsync: createCustomer } = useMutation({
+        mutationFn: async (data: DataMutation) => {
+            await window.api.addCustomer({
+                name: data.name,
+                email: data.email,
+                role: data.role,
+                status: true,
+                phone: data.phone,
+                address: data.address
+            }).then(() => {
+                navigate("/")
+            }).catch((err) => {
+                console.log("ERRO AO CADASTRAR: ", err)
+            })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["customers"] })
+        }
+    })
+
     async function handleAddCustomer(e: FormEvent) {
         e.preventDefault();
 
-        /* const response = await window.api.addCustomer(doc)
-        console.log(response) */
+        const name = nameRef.current?.value;
+        const address = addressRef.current?.value;
+        const email = emailRef.current?.value;
+        const phone = phoneRef.current?.value;
+        const role = roleRef.current?.value;
+
+        if (!name || !address || !email || !phone || !role) {
+            return;
+        }
+
+        await createCustomer({
+            name: name,
+            email: email,
+            phone: phone,
+            role: role,
+            address: address
+        })
     }
 
     return (
@@ -75,7 +123,8 @@ export function Create() {
 
                     <button
                         type="submit"
-                        className="bg-blue-500 rounded flex items-center justify-center w-full h-9"
+                        className="bg-blue-500 rounded flex items-center justify-center w-full h-9 disabled:bg-gray-500"
+                        disabled={isPending}
                     >
                         Cadastrar
                     </button>
